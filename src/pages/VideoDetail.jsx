@@ -1,5 +1,7 @@
+// // pages/VideoDetail.jsx
 // import { useParams } from 'react-router-dom';
-// import { useState, useEffect } from 'react';
+// import { useState, useEffect, useContext } from 'react';
+// import { VideoContext } from '../context/VideoContext';
 // import axios from 'axios';
 // import { motion } from 'framer-motion';
 // import VideoPlayer from '../components/VideoPlayer';
@@ -12,24 +14,18 @@
 
 // const VideoDetail = () => {
 //   const { id } = useParams();
+//   const { savedVideos, saveVideo, unsaveVideo } = useContext(VideoContext);
 //   const [video, setVideo] = useState(null);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
 //   const [relatedVideos, setRelatedVideos] = useState([]);
 //   const [relatedLoading, setRelatedLoading] = useState(true);
 //   const [isSubscribed, setIsSubscribed] = useState(false);
-//   const [isSaved, setIsSaved] = useState(false);
+//   const isSaved = savedVideos.includes(id); // Correctly deriving isSaved from context
 
-//   // useEffect(() => {
-//   //   const savedVideos = JSON.parse(localStorage.getItem('vidfow-saved') || []);
-//   //   setIsSaved(savedVideos.includes(id));
-//   // }, [id]);
-
-//   useEffect(() => {
-//     const savedVideos = JSON.parse(localStorage.getItem('vidfow-saved') || '[]');
-//     setIsSaved(savedVideos.includes(id));
-//   }, [id]);
-
+//   const handleSaveVideo = () => {
+//     isSaved ? unsaveVideo(id) : saveVideo(id);
+//   };
 
 //   const fetchVideo = async () => {
 //     try {
@@ -66,15 +62,6 @@
 //     setIsSubscribed(!isSubscribed);
 //   };
 
-//   const handleSaveVideo = () => {
-//     const savedVideos = JSON.parse(localStorage.getItem('vidfow-saved') || '[]');
-//     const updatedVideos = isSaved
-//       ? savedVideos.filter(videoId => videoId !== id)
-//       : [...savedVideos, id];
-    
-//     localStorage.setItem('vidfow-saved', JSON.stringify(updatedVideos));
-//     setIsSaved(!isSaved);
-//   };
 
 //   if (loading) return <Loader fullPage />;
 //   if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
@@ -91,11 +78,13 @@
 //           <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
 //             {video.title}
 //           </h1>
-          
-//           <ChannelInfo 
-//             channel={video.channel} 
+
+//           <ChannelInfo
+//             channel={video.channel}
 //             isSubscribed={isSubscribed}
 //             onSubscribe={handleSubscribe}
+//             isSaved={isSaved} // Pass isSaved from context
+//             onSave={handleSaveVideo} // Pass the handler from context
 //           />
 
 //           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl mb-8">
@@ -116,11 +105,11 @@
 //           <CommentsSection videoId={id} />
 //         </div>
 
-//         <div className="w-full lg:w-80 flex-shrink-0">
+//         {/* <div className="w-full lg:w-80 flex-shrink-0">
 //           <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
 //             Related Videos
 //           </h2>
-          
+
 //           {relatedLoading ? (
 //             <div className="space-y-4">
 //               {[...Array(4)].map((_, i) => (
@@ -134,7 +123,7 @@
 //               className="space-y-4"
 //             >
 //               {relatedVideos.map((video) => (
-//                 <motion.div 
+//                 <motion.div
 //                   key={video.id}
 //                   whileHover={{ x: 5 }}
 //                   transition={{ type: 'spring', stiffness: 300 }}
@@ -144,7 +133,7 @@
 //               ))}
 //             </motion.div>
 //           )}
-//         </div>
+//         </div> */}
 //       </div>
 //     </div>
 //   );
@@ -153,15 +142,12 @@
 // export default VideoDetail;
 
 
-// pages/VideoDetail.jsx
 import { useParams } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { VideoContext } from '../context/VideoContext';
 import axios from 'axios';
-import { motion } from 'framer-motion';
 import VideoPlayer from '../components/VideoPlayer';
 import ChannelInfo from '../components/ChannelInfo';
-import VideoCard from '../components/VideoCard';
 import CommentsSection from '../components/CommentsSection';
 import Loader from '../components/Loader';
 
@@ -173,24 +159,9 @@ const VideoDetail = () => {
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [relatedVideos, setRelatedVideos] = useState([]);
-  const [relatedLoading, setRelatedLoading] = useState(true);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const isSaved = savedVideos.includes(id); // Correctly deriving isSaved from context
+  const isSaved = savedVideos.includes(id);
 
-  const handleSaveVideo = () => {
-    isSaved ? unsaveVideo(id) : saveVideo(id);
-  };
-
-  // This useEffect is no longer needed as `isSaved` is directly derived
-  // from the `savedVideos` context value, which updates automatically.
-  // useEffect(() => {
-  //   const savedVideos = JSON.parse(localStorage.getItem('vidfow-saved') || '[]');
-  //   setIsSaved(savedVideos.includes(id)); // This line caused the error
-  // }, [id]);
-
-
-  const fetchVideo = async () => {
+  const fetchVideo = useCallback(async () => {
     try {
       const response = await axios.get(`https://apis.ccbp.in/videos/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -201,30 +172,20 @@ const VideoDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchRelatedVideos = async () => {
-    try {
-      const response = await axios.get('https://apis.ccbp.in/videos', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setRelatedVideos(response.data.videos.filter(v => v.id !== id).slice(0, 4));
-    } catch (err) {
-      console.error('Error fetching related videos:', err);
-    } finally {
-      setRelatedLoading(false);
-    }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchVideo();
-    fetchRelatedVideos();
-  }, [id]);
+  }, [fetchVideo]);
 
+  const handleSaveVideo = () => {
+    isSaved ? unsaveVideo(id) : saveVideo(id);
+  };
+
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const handleSubscribe = () => {
     setIsSubscribed(!isSubscribed);
   };
-
 
   if (loading) return <Loader fullPage />;
   if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
@@ -246,8 +207,8 @@ const VideoDetail = () => {
             channel={video.channel}
             isSubscribed={isSubscribed}
             onSubscribe={handleSubscribe}
-            isSaved={isSaved} // Pass isSaved from context
-            onSave={handleSaveVideo} // Pass the handler from context
+            isSaved={isSaved}
+            onSave={handleSaveVideo}
           />
 
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl mb-8">
@@ -267,36 +228,6 @@ const VideoDetail = () => {
 
           <CommentsSection videoId={id} />
         </div>
-
-        {/* <div className="w-full lg:w-80 flex-shrink-0">
-          <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-            Related Videos
-          </h2>
-
-          {relatedLoading ? (
-            <div className="space-y-4">
-              {[...Array(4)].map((_, i) => (
-                <Loader key={i} compact />
-              ))}
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-4"
-            >
-              {relatedVideos.map((video) => (
-                <motion.div
-                  key={video.id}
-                  whileHover={{ x: 5 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                >
-                  <VideoCard video={video} compact />
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-        </div> */}
       </div>
     </div>
   );
