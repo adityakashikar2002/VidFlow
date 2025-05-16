@@ -15,13 +15,15 @@
 //     setLikedVideos(liked);
 //   }, []);
 
-//   const saveVideo = (videoId) => {
+//    const saveVideo = (videoId) => {
+//     console.log('Saving video:', videoId);
 //     const updatedVideos = [...savedVideos, videoId];
 //     setSavedVideos(updatedVideos);
 //     localStorage.setItem('vidfow-saved', JSON.stringify(updatedVideos));
 //   };
 
 //   const unsaveVideo = (videoId) => {
+//     console.log('Unsaving video:', videoId);
 //     const updatedVideos = savedVideos.filter(id => id !== videoId);
 //     setSavedVideos(updatedVideos);
 //     localStorage.setItem('vidfow-saved', JSON.stringify(updatedVideos));
@@ -54,7 +56,6 @@
 //     </VideoContext.Provider>
 //   );
 // };
-
 
 
 // context/VideoContext.js
