@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
-import { FiUser, FiBell, FiLock, FiGlobe, FiMoon, FiSun } from 'react-icons/fi';
+import { FiUser, FiBell, FiGlobe, FiMoon, FiSun } from 'react-icons/fi';
 
 const Settings = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
