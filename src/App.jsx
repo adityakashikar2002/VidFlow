@@ -11,6 +11,13 @@ import Gaming from './pages/Gaming';
 import SavedVideos from './pages/SavedVideos';
 import LikedVideos from './pages/LikedVideos';
 import VideoDetail from './pages/VideoDetail';
+import Music from './pages/Music';
+import Kids from './pages/Kids';
+import Premium from './pages/Premium';
+import Settings from './pages/Settings';
+import Help from './pages/Help';
+import Feedback from './pages/Feedback';
+import Report from './pages/Report';
 import './styles/globals.css';
 import './styles/animations.css';
 
@@ -36,6 +43,13 @@ function App() {
                     <Route path="/saved" element={<SavedVideos />} />
                     <Route path="/liked" element={<LikedVideos />} />
                     <Route path="/video/:id" element={<VideoDetail />} />
+                    <Route path="/music" element={<Music />} />
+                    <Route path="/kids" element={<Kids/>} />
+                    <Route path="/premium" element={<Premium />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/help" element={<Help />} />
+                    <Route path="/feedback" element={<Feedback />} />
+                    <Route path="/report" element={<Report />} />
                   </Routes>
                 </main>
               </div>
