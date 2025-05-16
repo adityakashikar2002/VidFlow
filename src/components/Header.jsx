@@ -6,7 +6,7 @@ import { BsPersonCircle } from 'react-icons/bs';
 // import { RiPremiumLine } from 'react-icons/ri';
 import { RiAwardFill } from 'react-icons/ri';
 import ThemeToggle from './ThemeToggle';
-import Logo from '../assets/icons/logo.png';
+import Logo from '../assets/icons/logo-2.png';
 
 const Header = ({ sidebarOpen, setSidebarOpen }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -64,10 +64,10 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
             className="flex items-center"
           >
             <a href="/" className="flex items-center space-x-2 group">
-              <img src={Logo} alt="VidFow" className="h-8" />
-              <h2 className="text-2xl font-bold text-white font-[Poppins] tracking-tighter">
+              <img src={Logo} alt="VidFow" className="h-16" />
+              {/* <h2 className="text-2xl font-bold text-white font-[Poppins] tracking-tighter">
                 VidFlow
-              </h2>
+              </h2> */}
             </a>
           </motion.div>
         </div>
