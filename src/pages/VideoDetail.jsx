@@ -1,12 +1,9 @@
-// // pages/VideoDetail.jsx
 // import { useParams } from 'react-router-dom';
-// import { useState, useEffect, useContext } from 'react';
+// import { useState, useEffect, useContext, useCallback } from 'react';
 // import { VideoContext } from '../context/VideoContext';
 // import axios from 'axios';
-// import { motion } from 'framer-motion';
 // import VideoPlayer from '../components/VideoPlayer';
 // import ChannelInfo from '../components/ChannelInfo';
-// import VideoCard from '../components/VideoCard';
 // import CommentsSection from '../components/CommentsSection';
 // import Loader from '../components/Loader';
 
@@ -18,16 +15,9 @@
 //   const [video, setVideo] = useState(null);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
-//   const [relatedVideos, setRelatedVideos] = useState([]);
-//   const [relatedLoading, setRelatedLoading] = useState(true);
-//   const [isSubscribed, setIsSubscribed] = useState(false);
-//   const isSaved = savedVideos.includes(id); // Correctly deriving isSaved from context
+//   const isSaved = savedVideos.includes(id);
 
-//   const handleSaveVideo = () => {
-//     isSaved ? unsaveVideo(id) : saveVideo(id);
-//   };
-
-//   const fetchVideo = async () => {
+//   const fetchVideo = useCallback(async () => {
 //     try {
 //       const response = await axios.get(`https://apis.ccbp.in/videos/${id}`, {
 //         headers: { Authorization: `Bearer ${token}` },
@@ -38,30 +28,20 @@
 //     } finally {
 //       setLoading(false);
 //     }
-//   };
-
-//   const fetchRelatedVideos = async () => {
-//     try {
-//       const response = await axios.get('https://apis.ccbp.in/videos', {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-//       setRelatedVideos(response.data.videos.filter(v => v.id !== id).slice(0, 4));
-//     } catch (err) {
-//       console.error('Error fetching related videos:', err);
-//     } finally {
-//       setRelatedLoading(false);
-//     }
-//   };
+//   }, [id]);
 
 //   useEffect(() => {
 //     fetchVideo();
-//     fetchRelatedVideos();
-//   }, [id]);
+//   }, [fetchVideo]);
 
+//   const handleSaveVideo = () => {
+//     isSaved ? unsaveVideo(id) : saveVideo(id);
+//   };
+
+//   const [isSubscribed, setIsSubscribed] = useState(false);
 //   const handleSubscribe = () => {
 //     setIsSubscribed(!isSubscribed);
 //   };
-
 
 //   if (loading) return <Loader fullPage />;
 //   if (error) return <div className="text-red-500 p-4">Error: {error}</div>;
@@ -83,8 +63,8 @@
 //             channel={video.channel}
 //             isSubscribed={isSubscribed}
 //             onSubscribe={handleSubscribe}
-//             isSaved={isSaved} // Pass isSaved from context
-//             onSave={handleSaveVideo} // Pass the handler from context
+//             isSaved={isSaved}
+//             onSave={handleSaveVideo}
 //           />
 
 //           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl mb-8">
@@ -104,36 +84,6 @@
 
 //           <CommentsSection videoId={id} />
 //         </div>
-
-//         {/* <div className="w-full lg:w-80 flex-shrink-0">
-//           <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-//             Related Videos
-//           </h2>
-
-//           {relatedLoading ? (
-//             <div className="space-y-4">
-//               {[...Array(4)].map((_, i) => (
-//                 <Loader key={i} compact />
-//               ))}
-//             </div>
-//           ) : (
-//             <motion.div
-//               initial={{ opacity: 0 }}
-//               animate={{ opacity: 1 }}
-//               className="space-y-4"
-//             >
-//               {relatedVideos.map((video) => (
-//                 <motion.div
-//                   key={video.id}
-//                   whileHover={{ x: 5 }}
-//                   transition={{ type: 'spring', stiffness: 300 }}
-//                 >
-//                   <VideoCard video={video} compact />
-//                 </motion.div>
-//               ))}
-//             </motion.div>
-//           )}
-//         </div> */}
 //       </div>
 //     </div>
 //   );
@@ -179,7 +129,8 @@ const VideoDetail = () => {
   }, [fetchVideo]);
 
   const handleSaveVideo = () => {
-    isSaved ? unsaveVideo(id) : saveVideo(id);
+    if (!video) return;
+    isSaved ? unsaveVideo(video.id) : saveVideo(video.id);
   };
 
   const [isSubscribed, setIsSubscribed] = useState(false);
