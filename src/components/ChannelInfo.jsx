@@ -43,7 +43,7 @@ const ChannelInfo = ({ channel, isSubscribed, onSubscribe, isSaved, onSave, vide
         </div>
       </div>
 
-      <div className="flex items-center flex-wrap gap-2">
+      {/* <div className="flex items-center flex-wrap gap-2">
         <button
           onClick={handleLike}
           className={`flex items-center px-3 py-2 rounded-full ${
@@ -73,6 +73,59 @@ const ChannelInfo = ({ channel, isSubscribed, onSubscribe, isSaved, onSave, vide
           <FiBookmark className="mr-2" />
           {isSaved ? 'Saved' : 'Save'}
         </button>
+
+        <button className="flex items-center px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600">
+          <FiShare2 className="mr-2" />
+          Share
+        </button>
+
+        <button
+          onClick={onSubscribe}
+          className={`px-4 py-2 rounded-full ${isSubscribed
+            ? 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+            : 'bg-red-600 text-white hover:bg-red-700'}`}
+        >
+          {isSubscribed ? 'Subscribed' : 'Subscribe'}
+        </button>
+      </div>
+    </div>
+  );
+}; */}
+
+      <div className="flex items-center flex-wrap gap-2">
+        {onSave && (
+          <>
+            <button
+              onClick={handleLike}
+              className={`flex items-center px-3 py-2 rounded-full ${
+                isLiked
+                  ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200'
+                  : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600'
+              }`}
+            >
+              <FiThumbsUp className="mr-2" />
+              {isLiked ? 'Liked' : 'Like'}
+            </button>
+
+            <button
+              onClick={handleDislike}
+              className="flex items-center px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+            >
+              <FiThumbsDown className="mr-2" />
+              Dislike
+            </button>
+
+            <button
+              onClick={onSave}
+              className={`flex items-center px-3 py-2 rounded-full ${isSaved
+                ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200'
+                : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600'}`}
+            >
+              <FiBookmark className="mr-2" />
+              {isSaved ? 'Saved' : 'Save'}
+            </button>
+          </>
+        )}
 
         <button className="flex items-center px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600">
           <FiShare2 className="mr-2" />

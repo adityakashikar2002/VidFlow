@@ -88,7 +88,24 @@ const Music = () => {
     ];
 
 
-  return (
+//   return (
+//     <div className="p-4 fade-in">
+//       <div className="flex items-center mb-6">
+//         <div className="p-3 mr-4 bg-pink-100 dark:bg-pink-900 rounded-full">
+//           <FiMusic className="text-pink-600 dark:text-pink-300 text-xl" />
+//         </div>
+//         <h1 className="text-2xl font-bold">Music Videos</h1>
+//       </div>
+
+//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+//         {musicVideos.map((video) => (
+//           <VideoCard key={video.id} video={video} />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+return (
     <div className="p-4 fade-in">
       <div className="flex items-center mb-6">
         <div className="p-3 mr-4 bg-pink-100 dark:bg-pink-900 rounded-full">
@@ -99,7 +116,7 @@ const Music = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {musicVideos.map((video) => (
-          <VideoCard key={video.id} video={video} />
+          <VideoCard key={video.id} video={video} showActions={false} />
         ))}
       </div>
     </div>

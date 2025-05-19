@@ -88,7 +88,24 @@ const Kids = () => {
     ];
 
 
-  return (
+//   return (
+//     <div className="p-4 fade-in">
+//       <div className="flex items-center mb-6">
+//         <div className="p-3 mr-4 bg-green-100 dark:bg-green-900 rounded-full">
+//           <FiUsers className="text-green-600 dark:text-green-300 text-xl" />
+//         </div>
+//         <h1 className="text-2xl font-bold">Kids Content</h1>
+//       </div>
+
+//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+//         {kidsVideos.map((video) => (
+//           <VideoCard key={video.id} video={video} />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+ return (
     <div className="p-4 fade-in">
       <div className="flex items-center mb-6">
         <div className="p-3 mr-4 bg-green-100 dark:bg-green-900 rounded-full">
@@ -99,7 +116,7 @@ const Kids = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {kidsVideos.map((video) => (
-          <VideoCard key={video.id} video={video} />
+          <VideoCard key={video.id} video={video} showActions={false} />
         ))}
       </div>
     </div>
